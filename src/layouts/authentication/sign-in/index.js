@@ -1,22 +1,8 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 // react-router-dom components
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -37,14 +23,40 @@ import MDButton from "components/MDButton";
 
 // Authentication layout components
 import BasicLayout from "layouts/authentication/components/BasicLayout";
-
+import { loginUser } from "../../../api/login";
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
 function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const navigate = useNavigate();
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const { token, role, name } = await loginUser(email, password);
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", role);
+      localStorage.setItem("name", name);
+
+      // Clear inputs
+      setEmail("");
+      setPassword("");
+      setErrorMsg("");
+
+      // Navigate based on role
+      if (role === "Admin") navigate("/Dashboard");
+      else if (role === "Employee") navigate("/Dashboard");
+    } catch (error) {
+      setErrorMsg("Invalid email or password.");
+    }
+  };
 
   return (
     <BasicLayout image={bgImage}>
@@ -84,10 +96,23 @@ function Basic() {
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput type="email" label="Email" fullWidth />
+              <MDInput
+                type="email"
+                label="Email"
+                fullWidth
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </MDBox>
+
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" fullWidth />
+              <MDInput
+                type="password"
+                label="Password"
+                fullWidth
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -102,8 +127,8 @@ function Basic() {
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth>
-                sign in
+              <MDButton variant="gradient" color="info" fullWidth onClick={handleLogin}>
+                Sign In
               </MDButton>
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">

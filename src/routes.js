@@ -44,10 +44,18 @@ import Notifications from "layouts/notifications";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
-
+import Employee from "pages/employee";
+import Designation from "pages/designation";
+// import AddEmployeeKyc from "pages/employee/AddEmployeeKyc";
+import Project from "pages/project";
+import ProjectModule from "pages/projectmodule";
+import Status from "pages/status";
+import Priority from "pages/priority";
+import TaskAssign from "pages/task";
 // @mui icons
 import Icon from "@mui/material/Icon";
 
+const role = localStorage.getItem("role");
 const routes = [
   {
     type: "collapse",
@@ -57,62 +65,97 @@ const routes = [
     route: "/dashboard",
     component: <Dashboard />,
   },
-  {
-    type: "collapse",
-    name: "Tables",
-    key: "tables",
-    icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/tables",
-    component: <Tables />,
-  },
-  {
-    type: "collapse",
-    name: "Billing",
-    key: "billing",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/billing",
-    component: <Billing />,
-  },
-  {
-    type: "collapse",
-    name: "RTL",
-    key: "rtl",
-    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
-    route: "/rtl",
-    component: <RTL />,
-  },
-  {
-    type: "collapse",
-    name: "Notifications",
-    key: "notifications",
-    icon: <Icon fontSize="small">notifications</Icon>,
-    route: "/notifications",
-    component: <Notifications />,
-  },
-  {
-    type: "collapse",
-    name: "Profile",
-    key: "profile",
-    icon: <Icon fontSize="small">person</Icon>,
-    route: "/profile",
-    component: <Profile />,
-  },
-  {
-    type: "collapse",
-    name: "Sign In",
-    key: "sign-in",
-    icon: <Icon fontSize="small">login</Icon>,
-    route: "/authentication/sign-in",
-    component: <SignIn />,
-  },
-  {
-    type: "collapse",
-    name: "Sign Up",
-    key: "sign-up",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/authentication/sign-up",
-    component: <SignUp />,
-  },
 ];
+// if (role === "Employee") {
+//   routes.push(
+//     {
+//       type: "collapse",
+//       name: "Assigned Tasks",
+//       key: "assigned-tasks",
+//       icon: <Icon>assignment</Icon>,
+//       route: "/assigned-tasks",
+//       component: <AssignedTaskList />,
+//     },
+//     {
+//       type: "collapse",
+//       name: "Task History",
+//       key: "task-history",
+//       icon: <Icon>history</Icon>,
+//       route: "/task-history",
+//       component: <TaskHistory />, // you can implement it similarly
+//     }
+//   );
+// }
+
+if (role === "Admin") {
+  routes.push(
+    {
+      type: "collapse",
+      name: "Task Assign",
+      key: "task",
+      icon: <Icon>assignment</Icon>,
+      route: "/task",
+      component: <TaskAssign />,
+    },
+    {
+      type: "collapse",
+      name: "Project",
+      key: "project",
+      icon: <Icon>folder</Icon>,
+      route: "/project",
+      component: <Project />,
+    },
+    {
+      type: "collapse",
+      name: "Project Module",
+      key: "projectmodule",
+      icon: <Icon>view_module</Icon>,
+      route: "/projectmodule",
+      component: <ProjectModule />,
+    },
+    {
+      type: "collapse",
+      name: "Employee",
+      key: "employee",
+      icon: <Icon>people</Icon>,
+      route: "/employee",
+      component: <Employee />,
+    },
+    {
+      type: "collapse",
+      name: "Designation",
+      key: "designation",
+      icon: <Icon>badge</Icon>,
+      route: "/designation",
+      component: <Designation />,
+    },
+    {
+      type: "collapse",
+      name: "Task Status",
+      key: "status",
+      icon: <Icon>check_circle</Icon>,
+      route: "/status",
+      component: <Status />,
+    },
+    {
+      type: "collapse",
+      name: "Priority",
+      key: "priority",
+      icon: <Icon>priority_high</Icon>,
+      route: "/priority",
+      component: <Priority />,
+    }
+  );
+}
+
+// Sign In route is always shown
+routes.push({
+  type: "collapse",
+  name: "Sign In",
+  key: "sign-in",
+  icon: <Icon fontSize="small">login</Icon>,
+  route: "/authentication/sign-in",
+  component: <SignIn />,
+});
 
 export default routes;
