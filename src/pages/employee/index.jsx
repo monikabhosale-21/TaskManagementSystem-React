@@ -13,6 +13,7 @@ function EmployeesPage() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showKycForm, setShowKycForm] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
 
   const handleEditEmployee = (employee) => {
     setSelectedEmployee(employee);
@@ -24,10 +25,11 @@ function EmployeesPage() {
     setShowAddForm(false);
     setShowKycForm(false);
     setSelectedEmployee(null);
+    setSelectedEmployeeId(null);
   };
 
-  const handleAddKyc = (employee) => {
-    setSelectedEmployee(employee);
+  const handleAddKyc = (employeeId) => {
+    setSelectedEmployeeId(employeeId);
     setShowAddForm(false);
     setShowKycForm(true);
   };
@@ -43,7 +45,7 @@ function EmployeesPage() {
                 {showAddForm ? (
                   <AddEmployee onClose={handleFormClose} existingEmployee={selectedEmployee} />
                 ) : showKycForm ? (
-                  <AddEmployeeKyc onClose={handleFormClose} employee={selectedEmployee} />
+                  <AddEmployeeKyc onClose={handleFormClose} employeeId={selectedEmployeeId} />
                 ) : (
                   <EmployeeList onEdit={handleEditEmployee} onAddKyc={handleAddKyc} />
                 )}

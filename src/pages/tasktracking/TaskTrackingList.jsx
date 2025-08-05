@@ -14,19 +14,19 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import { getPrioritys, deletePriority } from "../../api/Priority";
+import { GetAllTaskTracking } from "../../api/Task";
 
-const PriorityList = ({ onEdit }) => {
-  const [Prioritys, setPrioritys] = useState([]);
+const TaskTrackingList = ({ onEdit }) => {
+  const [TaskTrackings, setTaskTrackings] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
   useEffect(() => {
-    getPrioritys()
+    GetAllTaskTracking()
       .then((res) => {
-        setPrioritys(res.data.data);
+        setTaskTrackings(res.data.data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -36,27 +36,15 @@ const PriorityList = ({ onEdit }) => {
     setCurrentPage(1);
   }, [searchTerm]);
 
-  const handleDelete = async (PriorityId) => {
-    if (window.confirm("Are you sure you want to delete this Priority?")) {
-      try {
-        await deletePriority(priorityId);
-        alert("Priority deleted successfully");
-        setPrioritys((prev) => prev.filter((c) => c.priorityId !== priorityId));
-      } catch (error) {
-        alert("Failed to delete Priority");
-      }
-    }
-  };
-
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
 
-  const filteredPrioritys = Prioritys.filter((c) =>
-    `${c.PriorityName} ${c.mobile}`.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredTaskTrackings = TaskTrackings.filter((c) =>
+    `${c.name} ${c.code}`.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const paginatedPrioritys = filteredPrioritys.slice(
+  const paginatedTaskTrackings = filteredTaskTrackings.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -74,31 +62,16 @@ const PriorityList = ({ onEdit }) => {
           onChange={(e) => setSearchTerm(e.target.value)}
           sx={{ flexGrow: 1, mr: 2 }}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => onEdit(null)}
-          sx={{
-            height: "40px",
-            borderRadius: "8px",
-            fontWeight: "bold",
-            textTransform: "none",
-            color: "#fff",
-          }}
-        >
-          + Add Priority
-        </Button>
       </MDBox>
-
       <MDTypography variant="h5" fontWeight="bold" mb={2}>
-        Priority List
+        Task Tracking List
       </MDTypography>
 
-      {/* Priority Table */}
+      {/* TaskTracking Table */}
       <MDBox component="table" width="100%" sx={{ borderCollapse: "collapse" }}>
         <MDBox component="thead" sx={{ backgroundColor: "#f5f5f5" }}>
           <MDBox component="tr">
-            {["Id", "Priority", "Color Code", "Actions"].map((header) => (
+            {["Sr. No", "Task Label", "Assign To", "Operation", "Date Time"].map((header) => (
               <MDBox
                 component="th"
                 key={header}
@@ -111,7 +84,7 @@ const PriorityList = ({ onEdit }) => {
           </MDBox>
         </MDBox>
         <MDBox component="tbody">
-          {paginatedPrioritys.map((c, index) => (
+          {paginatedTaskTrackings.map((c, index) => (
             <MDBox
               component="tr"
               key={index}
@@ -121,39 +94,24 @@ const PriorityList = ({ onEdit }) => {
               }}
             >
               <MDBox component="td" sx={{ padding: "10px" }}>
-                <MDTypography variant="body2">{c.priorityId}</MDTypography>
-              </MDBox>
-              <MDBox component="td" sx={{ padding: "10px" }}>
-                <MDTypography variant="body2">{c.priorityName}</MDTypography>
+                <MDTypography variant="body2">
+                  {(currentPage - 1) * itemsPerPage + index + 1}
+                </MDTypography>
               </MDBox>
               {/* <MDBox component="td" sx={{ padding: "10px" }}>
-                <MDTypography variant="body2">{c.colorCode}</MDTypography>
+                <MDTypography variant="body2">{c.TaskTrackingId}</MDTypography>
               </MDBox> */}
               <MDBox component="td" sx={{ padding: "10px" }}>
-                <Stack direction="row" spacing={1}>
-                  <Box
-                    sx={{
-                      width: 16,
-                      height: 16,
-                      alignContent: "center",
-                      borderRadius: "4px",
-                      backgroundColor: c.colorCode,
-                      border: "1px solid #ccc",
-                    }}
-                    title={c.colorCode}
-                  />
-                  <MDTypography variant="body2">{c.colorCode}</MDTypography>
-                </Stack>
+                <MDTypography variant="body2">{c.taskLabel}</MDTypography>
               </MDBox>
               <MDBox component="td" sx={{ padding: "10px" }}>
-                <Stack direction="row" spacing={1}>
-                  <IconButton color="info" onClick={() => onEdit(c)}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton color="error" onClick={() => handleDelete(c.priorityId)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </Stack>
+                <MDTypography variant="body2">{c.assignTo}</MDTypography>
+              </MDBox>
+              <MDBox component="td" sx={{ padding: "10px" }}>
+                <MDTypography variant="body2">{c.operation}</MDTypography>
+              </MDBox>
+              <MDBox component="td" sx={{ padding: "10px" }}>
+                <MDTypography variant="body2">{c.dateTime?.substring(0, 10)}</MDTypography>
               </MDBox>
             </MDBox>
           ))}
@@ -163,7 +121,7 @@ const PriorityList = ({ onEdit }) => {
       {/* Pagination Controls */}
       <Box display="flex" justifyContent="center" mt={3}>
         <Pagination
-          count={Math.ceil(filteredPrioritys.length / itemsPerPage)}
+          count={Math.ceil(filteredTaskTrackings.length / itemsPerPage)}
           page={currentPage}
           onChange={handlePageChange}
           color="info"
@@ -174,8 +132,8 @@ const PriorityList = ({ onEdit }) => {
   );
 };
 
-PriorityList.propTypes = {
+TaskTrackingList.propTypes = {
   onEdit: PropTypes.func.isRequired,
 };
 
-export default PriorityList;
+export default TaskTrackingList;

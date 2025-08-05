@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import PropTypes from "prop-types";
 import {
   CircularProgress,
@@ -21,16 +24,44 @@ const TaskList = ({ onEdit }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const userRole = localStorage.getItem("role");
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const menuOpen = Boolean(anchorEl);
+
   const itemsPerPage = 5;
 
+  // useEffect(() => {
+  //   getTasks()
+  //     .then((res) => {
+  //       setTasks(res.data.data);
+  //       setLoading(false);
+  //     })
+  //     .catch(() => setLoading(false));
+  // }, []);
   useEffect(() => {
-    getTasks()
-      .then((res) => {
-        setTasks(res.data.data);
+    const fetchTasks = async () => {
+      try {
+        const res = await getTasks();
+        const allTasks = res.data.data || [];
+
+        if (userRole === "Employee") {
+          const userId = parseInt(localStorage.getItem("id"));
+          const filtered = allTasks.filter((t) => t.assignedEmployeeId === userId);
+          setTasks(filtered);
+        } else {
+          setTasks(allTasks);
+        }
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      } finally {
         setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
+      }
+    };
+
+    fetchTasks();
+  }, [userRole]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -46,6 +77,25 @@ const TaskList = ({ onEdit }) => {
         alert("Failed to delete Task");
       }
     }
+  };
+  const handleMenuClick = (event, task) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedTask(task);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedTask(null);
+  };
+
+  const handleEdit = () => {
+    onEdit(selectedTask);
+    handleMenuClose();
+  };
+
+  const handleDeleteClick = () => {
+    handleDelete(selectedTask.taskId);
+    handleMenuClose();
   };
 
   const handlePageChange = (event, value) => {
@@ -74,20 +124,22 @@ const TaskList = ({ onEdit }) => {
           onChange={(e) => setSearchTerm(e.target.value)}
           sx={{ flexGrow: 1, mr: 2 }}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => onEdit(null)}
-          sx={{
-            height: "40px",
-            borderRadius: "8px",
-            fontWeight: "bold",
-            textTransform: "none",
-            color: "#fff",
-          }}
-        >
-          + Add Task
-        </Button>
+        {userRole === "Admin" && (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => onEdit(null)}
+            sx={{
+              height: "40px",
+              borderRadius: "8px",
+              fontWeight: "bold",
+              textTransform: "none",
+              color: "#fff",
+            }}
+          >
+            + Add Task
+          </Button>
+        )}
       </MDBox>
 
       <MDTypography variant="h5" fontWeight="bold" mb={2}>
@@ -160,14 +212,9 @@ const TaskList = ({ onEdit }) => {
                 <MDTypography variant="body2">{c.statusName}</MDTypography>
               </MDBox>
               <MDBox component="td" sx={{ padding: "10px" }}>
-                <Stack direction="row" spacing={1}>
-                  <IconButton color="info" onClick={() => onEdit(c)}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton color="error" onClick={() => handleDelete(c.taskId)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </Stack>
+                <IconButton onClick={(e) => handleMenuClick(e, c)}>
+                  <MoreVertIcon />
+                </IconButton>
               </MDBox>
             </MDBox>
           ))}
@@ -184,6 +231,32 @@ const TaskList = ({ onEdit }) => {
           shape="rounded"
         />
       </Box>
+      <Menu
+        anchorEl={anchorEl}
+        open={menuOpen}
+        onClose={handleMenuClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        {(userRole === "Admin" || userRole === "Employee") && (
+          <MenuItem onClick={handleEdit} sx={{ "&:hover": { backgroundColor: "#f0f0f0" } }}>
+            <EditIcon fontSize="small" sx={{ mr: 1 }} />
+            Edit
+          </MenuItem>
+        )}
+        {userRole === "Admin" && (
+          <MenuItem onClick={handleDeleteClick}>
+            <DeleteIcon fontSize="small" sx={{ mr: 1 }} />
+            Delete
+          </MenuItem>
+        )}
+      </Menu>
     </MDBox>
   );
 };

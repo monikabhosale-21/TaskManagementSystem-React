@@ -74,6 +74,7 @@ const AddProjectModule = ({ onClose, existingProjectModule }) => {
             name="projectId"
             value={form.projectId}
             onChange={handleChange}
+            margin="dense"
             fullWidth
             sx={{
               height: "44px", // Height of the input
@@ -92,7 +93,7 @@ const AddProjectModule = ({ onClose, existingProjectModule }) => {
             name="moduleName"
             label="Module Name"
             fullWidth
-            margin="normal"
+            margin="dense"
             value={form.moduleName}
             onChange={handleChange}
             required
@@ -108,7 +109,7 @@ const AddProjectModule = ({ onClose, existingProjectModule }) => {
                 height: "44px", // Adjust height of the actual input box
               },
             }}
-            margin="normal"
+            margin="dense"
             value={form.statusId}
             onChange={handleChange}
             required

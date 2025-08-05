@@ -71,9 +71,6 @@ const AddTask = ({ onClose, existingTask }) => {
     fetchData();
   }, []);
 
-  // const handleChange = (e) => {
-  //   setForm({ ...form, [e.target.name]: e.target.value });
-  // };
   const handleChange = async (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
@@ -87,7 +84,7 @@ const AddTask = ({ onClose, existingTask }) => {
           moduleId: "", // reset moduleId if project changed
         }));
       } catch (err) {
-        console.error("Failed to load modules for selected project", err);
+        console.error("Failed to load tasks for selected project", err);
       }
     }
   };
@@ -96,10 +93,10 @@ const AddTask = ({ onClose, existingTask }) => {
     try {
       if (form.id) {
         await updateTask(form);
-        alert("Project Module updated successfully");
+        alert("Task updated successfully");
       } else {
         await addTask(form);
-        alert("Project Module added successfully");
+        alert("Task added successfully");
       }
       onClose();
     } catch (error) {
@@ -111,7 +108,7 @@ const AddTask = ({ onClose, existingTask }) => {
     <Card sx={{ mt: 3 }}>
       <CardContent>
         <Typography variant="h5" gutterBottom>
-          {form.id ? "Edit Project Module" : "Add Project Module"}
+          {form.id ? "Edit Task Assign" : "Add Task Assign"}
         </Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>

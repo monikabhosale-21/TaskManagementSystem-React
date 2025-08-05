@@ -39,12 +39,12 @@ function Basic() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const { token, role, name } = await loginUser(email, password);
+      const { token, role, name, id } = await loginUser(email, password);
 
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
       localStorage.setItem("name", name);
-
+      localStorage.setItem("id", id);
       // Clear inputs
       setEmail("");
       setPassword("");

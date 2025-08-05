@@ -11,6 +11,8 @@ export const updateEmployee = (Employee) => axios.put(`${API_URL}Update/${Employ
 export const deleteEmployee = (Id) => axios.delete(`${API_URL}Delete/${Id}`);
 
 export const uploadKyc = (formData) =>
-  axios.post(`${BASE_URL}/upload-kyc`, formData, {
+  axios.post(`${API_URL}UploadKyc`, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
+
+export const generateEmployeeCode = () => axios.get(API_URL + "GenerateEmployeeCode");

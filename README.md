@@ -152,12 +152,15 @@ material-dashboard-react
     │   │   └── Timeline
     │   ├── layouts
     │   │   ├── authentication
-    │   │   ├── billing
-    │   │   ├── dashboard
-    │   │   ├── notifications
-    │   │   ├── profile
-    │   │   ├── rtl
-    │   │   └── tables
+    |   ├── pages
+    |   |   ├── designation
+    |   |   ├── employee
+    |   |   ├── priority
+    |   |   ├── project
+    |   |   ├── projectModule
+    |   |   ├── status
+    |   |   ├── task
+    │   │ 
     │   ├── App.js
     │   ├── index.js
     │   └── routes.js

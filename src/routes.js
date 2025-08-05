@@ -46,13 +46,12 @@ import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 import Employee from "pages/employee";
 import Designation from "pages/designation";
-// import AddEmployeeKyc from "pages/employee/AddEmployeeKyc";
 import Project from "pages/project";
 import ProjectModule from "pages/projectmodule";
 import Status from "pages/status";
 import Priority from "pages/priority";
 import TaskAssign from "pages/task";
-// @mui icons
+import TaskTracking from "pages/tasktracking";
 import Icon from "@mui/material/Icon";
 
 const role = localStorage.getItem("role");
@@ -66,26 +65,26 @@ const routes = [
     component: <Dashboard />,
   },
 ];
-// if (role === "Employee") {
-//   routes.push(
-//     {
-//       type: "collapse",
-//       name: "Assigned Tasks",
-//       key: "assigned-tasks",
-//       icon: <Icon>assignment</Icon>,
-//       route: "/assigned-tasks",
-//       component: <AssignedTaskList />,
-//     },
-//     {
-//       type: "collapse",
-//       name: "Task History",
-//       key: "task-history",
-//       icon: <Icon>history</Icon>,
-//       route: "/task-history",
-//       component: <TaskHistory />, // you can implement it similarly
-//     }
-//   );
-// }
+if (role === "Employee") {
+  routes.push(
+    {
+      type: "collapse",
+      name: "Task Assign",
+      key: "task",
+      icon: <Icon>assignment</Icon>,
+      route: "/task",
+      component: <TaskAssign />,
+    },
+    {
+      type: "collapse",
+      name: "Task Tracking",
+      key: "tasktracking",
+      icon: <Icon>assignment</Icon>,
+      route: "/tasktracking",
+      component: <TaskTracking />,
+    }
+  );
+}
 
 if (role === "Admin") {
   routes.push(
@@ -96,6 +95,14 @@ if (role === "Admin") {
       icon: <Icon>assignment</Icon>,
       route: "/task",
       component: <TaskAssign />,
+    },
+    {
+      type: "collapse",
+      name: "Task Tracking",
+      key: "tasktracking",
+      icon: <Icon>assignment</Icon>,
+      route: "/tasktracking",
+      component: <TaskTracking />,
     },
     {
       type: "collapse",

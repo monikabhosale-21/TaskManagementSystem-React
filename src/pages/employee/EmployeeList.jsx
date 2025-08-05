@@ -259,9 +259,23 @@ const EmployeeList = ({ onEdit, onAddKyc }) => {
           onChange={(e) => setSearchTerm(e.target.value)}
           sx={{ flexGrow: 1, mr: 2 }}
         />
-        <Button variant="contained" color="primary" onClick={() => onEdit(null)}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => onEdit(null)}
+          sx={{
+            height: "40px",
+            borderRadius: "8px",
+            fontWeight: "bold",
+            textTransform: "none",
+            color: "#fff",
+          }}
+        >
           + Add Employee
         </Button>
+        {/* <Button variant="contained" color="primary" onClick={() => onEdit(null)}>
+          + Add Employee
+        </Button> */}
       </MDBox>
 
       <MDTypography variant="h5" fontWeight="bold" mb={2}>
@@ -315,7 +329,7 @@ const EmployeeList = ({ onEdit, onAddKyc }) => {
                   <IconButton color="error" onClick={() => handleDelete(c.id)}>
                     <DeleteIcon />
                   </IconButton>
-                  <Button variant="outlined" size="small" onClick={() => onAddKyc(c)}>
+                  <Button variant="outlined" size="small" onClick={() => onAddKyc(c.id)}>
                     Add KYC
                   </Button>
                 </Stack>
